@@ -19,6 +19,7 @@ class RecordSoundsViewController: UIViewController, AVAudioRecorderDelegate {
     
     @IBOutlet weak var microphoneButton: UIButton!
     @IBOutlet weak var stopButtonOutlet: UIButton!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
     }
@@ -53,9 +54,7 @@ class RecordSoundsViewController: UIViewController, AVAudioRecorderDelegate {
     }
 
     @IBAction func stopButtonPressed(sender: UIButton) {
-        recordingLabel.hidden = true
-        microphoneButton.enabled = true
-        stopButtonOutlet.hidden = true
+        setNotRecording()
         audioRecorder.stop()
         var audioSession = AVAudioSession.sharedInstance()
         audioSession.setActive(false, error: nil)
@@ -66,16 +65,12 @@ class RecordSoundsViewController: UIViewController, AVAudioRecorderDelegate {
             recordedAudio = RecordedAudio(pathArray: recorder.url, titlePassed: recorder.url.lastPathComponent!)
             self.performSegueWithIdentifier("stopButtonPressedSegue", sender: recordedAudio)
         } else {
-            microphoneButton.enabled = true
-            recordingLabel.hidden = true
-            stopButtonOutlet.hidden = true
+            setNotRecording()
         }
     }
     
     override func viewWillAppear(animated: Bool) {
-        stopButtonOutlet.hidden = true
-        microphoneButton.enabled = true
-        instructionsLabel.hidden = false
+        setNotRecording()
     }
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
@@ -85,6 +80,13 @@ class RecordSoundsViewController: UIViewController, AVAudioRecorderDelegate {
             
             playSoundsVC.audio = data
         }
+    }
+    
+    func setNotRecording () {
+        microphoneButton.enabled = true
+        recordingLabel.hidden = true
+        stopButtonOutlet.hidden = true
+        instructionsLabel.hidden = false
     }
 }
 
